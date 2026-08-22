@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel del Jugador — Club de Voley</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html"><span class="ball"></span> Club de Voley</a>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm" onclick="Sesion.cerrar()">Cerrar sesión</button>
+    </div>
+  </div>
+</header>
+
+<div class="panel-shell">
+  <aside class="panel-side">
+    <div class="who" id="quien-soy">Cargando…</div>
+    <nav>
+      <a href="#horarios" class="tab-link active" data-tab="horarios">Mis horarios</a>
+      <a href="#resultados" class="tab-link" data-tab="resultados">Resultados</a>
+      <a href="#cuota" class="tab-link" data-tab="cuota">Pagar cuota</a>
+      <a href="#noticias" class="tab-link" data-tab="noticias">Noticias</a>
+    </nav>
+  </aside>
+
+  <main class="panel-main">
+
+    <section id="tab-horarios" class="tab-view">
+      <div class="section-title"><h2>Mis horarios de entrenamiento</h2></div>
+      <div id="horarios-cont"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+    <section id="tab-resultados" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Resultados de mi equipo</h2></div>
+      <div id="resultados-cont"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+    <section id="tab-cuota" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Mi cuota mensual</h2></div>
+      <div id="cuota-alert"></div>
+      <div id="cuota-cont"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+    <section id="tab-noticias" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Últimas noticias</h2></div>
+      <div id="noticias-cont" class="grid grid-2"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/panel-jugador.js"></script>
+</body>
+</html>

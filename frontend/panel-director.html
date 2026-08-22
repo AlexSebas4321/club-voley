@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel del Director Técnico — Club de Voley</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html"><span class="ball"></span> Club de Voley</a>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm" onclick="Sesion.cerrar()">Cerrar sesión</button>
+    </div>
+  </div>
+</header>
+
+<div class="panel-shell">
+  <aside class="panel-side">
+    <div class="who" id="quien-soy">Cargando…</div>
+    <nav>
+      <a href="#noticias" class="tab-link active" data-tab="noticias">Publicar noticia</a>
+      <a href="#resultados" class="tab-link" data-tab="resultados">Cargar resultados</a>
+      <a href="#horarios" class="tab-link" data-tab="horarios">Horarios de mi equipo</a>
+      <a href="#mensajes" class="tab-link" data-tab="mensajes">Enviar mensaje</a>
+    </nav>
+  </aside>
+
+  <main class="panel-main">
+
+    <section id="tab-noticias" class="tab-view">
+      <div class="section-title"><h2>Publicar una noticia</h2></div>
+      <div id="noticia-alert"></div>
+      <form id="form-noticia" class="form-box" style="max-width:560px">
+        <div class="field"><label>Título</label><input type="text" id="n-titulo" required></div>
+        <div class="field"><label>Contenido</label><textarea id="n-contenido" required></textarea></div>
+        <div class="field">
+          <label>Estado</label>
+          <select id="n-estado">
+            <option value="publicada">Publicar ahora</option>
+            <option value="borrador">Guardar como borrador</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Guardar noticia</button>
+      </form>
+      <div class="section-title" style="margin-top:36px"><h2>Mis noticias</h2></div>
+      <div id="mis-noticias" class="grid grid-2"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+    <section id="tab-resultados" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Cargar / actualizar resultado</h2></div>
+      <div id="resultado-alert"></div>
+      <form id="form-resultado" class="form-box" style="max-width:480px">
+        <div class="field"><label>Equipo</label><select id="r-equipo" required></select></div>
+        <div class="field"><label>Rival</label><input type="text" id="r-rival" required></div>
+        <div class="field"><label>Fecha</label><input type="date" id="r-fecha" required></div>
+        <div class="field"><label>Resultado (ej: 3-1)</label><input type="text" id="r-resultado" placeholder="3-1"></div>
+        <button class="btn btn-primary" type="submit">Guardar partido</button>
+      </form>
+      <div class="section-title" style="margin-top:32px"><h2>Historial</h2></div>
+      <div id="lista-resultados"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+    <section id="tab-horarios" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Horarios de entrenamiento</h2></div>
+      <div id="horario-alert"></div>
+      <form id="form-horario" class="form-box" style="max-width:480px">
+        <div class="field"><label>Equipo</label><select id="h-equipo" required></select></div>
+        <div class="field">
+          <label>Día</label>
+          <select id="h-dia" required>
+            <option>Lunes</option><option>Martes</option><option>Miércoles</option>
+            <option>Jueves</option><option>Viernes</option><option>Sábado</option><option>Domingo</option>
+          </select>
+        </div>
+        <div class="field"><label>Hora de inicio</label><input type="time" id="h-inicio" required></div>
+        <div class="field"><label>Hora de fin</label><input type="time" id="h-fin" required></div>
+        <div class="field"><label>Lugar</label><input type="text" id="h-lugar" placeholder="Gimnasio Municipal"></div>
+        <button class="btn btn-primary" type="submit">Agregar horario</button>
+      </form>
+      <div class="section-title" style="margin-top:32px"><h2>Horarios cargados</h2></div>
+      <div id="lista-horarios"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+    <section id="tab-mensajes" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Enviar mensaje por correo</h2></div>
+      <p style="color:var(--ink-soft); font-size:.9rem; max-width:560px;">
+        El mensaje se envía por correo electrónico (Gmail) a los destinatarios elegidos.
+        Requiere que el administrador haya configurado la cuenta de Gmail del club en el servidor.
+      </p>
+      <div id="msg-alert"></div>
+      <form id="form-mensaje" class="form-box" style="max-width:560px">
+        <div class="field">
+          <label>Destinatarios</label>
+          <select id="m-destino" required>
+            <option value="equipo">Jugadores de mi equipo</option>
+            <option value="individual">Un jugador puntual</option>
+          </select>
+        </div>
+        <div class="field" id="campo-equipo">
+          <label>Equipo</label>
+          <select id="m-equipo"></select>
+        </div>
+        <div class="field" id="campo-individual" style="display:none">
+          <label>Jugador</label>
+          <select id="m-usuario"></select>
+        </div>
+        <div class="field"><label>Asunto</label><input type="text" id="m-asunto" required></div>
+        <div class="field"><label>Mensaje</label><textarea id="m-cuerpo" required></textarea></div>
+        <button class="btn btn-primary" type="submit">Enviar por Gmail</button>
+      </form>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/panel-director.js"></script>
+</body>
+</html>

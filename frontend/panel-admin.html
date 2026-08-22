@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administración — Club de Voley</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html"><span class="ball"></span> Club de Voley</a>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm" onclick="Sesion.cerrar()">Cerrar sesión</button>
+    </div>
+  </div>
+</header>
+
+<div class="panel-shell">
+  <aside class="panel-side">
+    <div class="who" id="quien-soy">Cargando…</div>
+    <nav>
+      <a href="#usuarios" class="tab-link active" data-tab="usuarios">Usuarios</a>
+      <a href="#equipos" class="tab-link" data-tab="equipos">Equipos y categorías</a>
+      <a href="#mensajes" class="tab-link" data-tab="mensajes">Mensajería</a>
+      <a href="#historial" class="tab-link" data-tab="historial">Historial de envíos</a>
+    </nav>
+  </aside>
+
+  <main class="panel-main">
+
+    <section id="tab-usuarios" class="tab-view">
+      <div class="section-title"><h2>Gestión de usuarios</h2></div>
+      <div id="usr-alert"></div>
+      <form id="form-usuario" class="form-box" style="max-width:520px; margin-bottom:28px;">
+        <div class="field"><label>Nombre</label><input type="text" id="u-nombre" required></div>
+        <div class="field"><label>Email</label><input type="email" id="u-email" required></div>
+        <div class="field"><label>Contraseña</label><input type="password" id="u-pass" required minlength="6"></div>
+        <div class="field">
+          <label>Rol</label>
+          <select id="u-rol">
+            <option value="jugador">Jugador</option>
+            <option value="director_tecnico">Director Técnico</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Crear usuario</button>
+      </form>
+
+      <div id="tabla-usuarios"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+    <section id="tab-equipos" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Categorías</h2></div>
+      <form id="form-categoria" class="form-box" style="max-width:480px; margin-bottom:20px;">
+        <div class="field"><label>Nombre (ej: Sub-14, Mayores)</label><input type="text" id="c-nombre" required></div>
+        <div class="field"><label>Descripción</label><input type="text" id="c-desc"></div>
+        <button class="btn btn-outline" type="submit">Agregar categoría</button>
+      </form>
+      <div id="lista-categorias" style="margin-bottom:36px"></div>
+
+      <div class="section-title"><h2>Equipos</h2></div>
+      <form id="form-equipo" class="form-box" style="max-width:480px; margin-bottom:20px;">
+        <div class="field"><label>Nombre del equipo</label><input type="text" id="e-nombre" required></div>
+        <div class="field"><label>Categoría</label><select id="e-categoria"></select></div>
+        <div class="field"><label>Director Técnico</label><select id="e-director"></select></div>
+        <div class="field"><label>Descripción</label><input type="text" id="e-desc"></div>
+        <button class="btn btn-primary" type="submit">Crear equipo</button>
+      </form>
+      <div id="lista-equipos"></div>
+    </section>
+
+    <section id="tab-mensajes" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Enviar mensaje por correo (Gmail)</h2></div>
+      <p style="color:var(--ink-soft); font-size:.9rem; max-width:600px;">
+        Se envía un correo real usando la cuenta de Gmail configurada en el servidor (variables
+        <code>EMAIL_USER</code> / <code>EMAIL_PASS</code> del archivo .env del backend).
+      </p>
+      <div id="msg-alert"></div>
+      <form id="form-mensaje" class="form-box" style="max-width:560px">
+        <div class="field">
+          <label>Destinatarios</label>
+          <select id="m-destino" required>
+            <option value="todos">Todos los usuarios</option>
+            <option value="jugadores">Todos los jugadores</option>
+            <option value="directores">Todos los directores técnicos</option>
+            <option value="equipo">Jugadores de un equipo</option>
+            <option value="individual">Una persona puntual</option>
+          </select>
+        </div>
+        <div class="field" id="campo-equipo" style="display:none">
+          <label>Equipo</label>
+          <select id="m-equipo"></select>
+        </div>
+        <div class="field" id="campo-individual" style="display:none">
+          <label>Persona</label>
+          <select id="m-usuario"></select>
+        </div>
+        <div class="field"><label>Asunto</label><input type="text" id="m-asunto" required></div>
+        <div class="field"><label>Mensaje</label><textarea id="m-cuerpo" required></textarea></div>
+        <button class="btn btn-primary" type="submit">Enviar por Gmail</button>
+      </form>
+    </section>
+
+    <section id="tab-historial" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Historial de mensajes enviados</h2></div>
+      <div id="tabla-historial"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/panel-admin.js"></script>
+</body>
+</html>

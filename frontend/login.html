@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar sesión — Club de Voley</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html"><span class="ball"></span> Club de Voley</a>
+    <nav class="nav-links">
+      <a href="index.html">Inicio</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="horarios.html">Horarios</a>
+      <a href="resultados.html">Resultados</a>
+      <a href="galeria.html">Galería</a>
+    </nav>
+    <div class="nav-actions"></div>
+  </div>
+</header>
+
+<section class="block">
+  <div class="wrap" style="display:flex; gap:32px; flex-wrap:wrap; justify-content:center;">
+
+    <div>
+      <div class="section-title"><h2>Iniciar sesión</h2></div>
+      <form id="form-login" class="form-box">
+        <div id="login-alert"></div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="login-email" required placeholder="tu@email.com">
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="login-pass" required placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" style="width:100%" type="submit">Ingresar</button>
+        <p style="font-size:.8rem; color:var(--ink-soft); margin-top:14px;">
+          Demo: admin@clubvoley.com / director@clubvoley.com / jugador@clubvoley.com — contraseña <b>123456</b>
+        </p>
+      </form>
+    </div>
+
+    <div>
+      <div class="section-title"><h2>Registrarme como jugador</h2></div>
+      <form id="form-registro" class="form-box">
+        <div id="reg-alert"></div>
+        <div class="field">
+          <label>Nombre completo</label>
+          <input type="text" id="reg-nombre" required>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="reg-email" required>
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="reg-pass" required minlength="6">
+        </div>
+        <div class="field">
+          <label>Fecha de nacimiento</label>
+          <input type="date" id="reg-nacimiento">
+        </div>
+        <div class="field">
+          <label>Posición de juego</label>
+          <select id="reg-posicion">
+            <option value="">Sin especificar</option>
+            <option>Armador</option>
+            <option>Punta</option>
+            <option>Central</option>
+            <option>Opuesto</option>
+            <option>Líbero</option>
+          </select>
+        </div>
+        <button class="btn btn-dark" style="width:100%" type="submit">Crear cuenta</button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer"><div class="wrap">Club de Voley — Sitio institucional</div></footer>
+
+<script src="js/api.js"></script>
+<script>
+document.getElementById('form-login').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const alertBox = document.getElementById('login-alert');
+  alertBox.innerHTML = '';
+  try {
+    const data = await apiFetch('/auth/login', {
+      method: 'POST',
+      body: {
+        email: document.getElementById('login-email').value,
+        contrasena: document.getElementById('login-pass').value,
+      },
+    });
+    Sesion.guardar(data.token, data.usuario);
+    const destino = data.usuario.rol === 'administrador' ? 'panel-admin.html'
+                  : data.usuario.rol === 'director_tecnico' ? 'panel-director.html'
+                  : 'panel-jugador.html';
+    window.location.href = destino;
+  } catch (err) {
+    alertBox.innerHTML = `<div class="alert alert-error">${esc(err.message)}</div>`;
+  }
+});
+
+document.getElementById('form-registro').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const alertBox = document.getElementById('reg-alert');
+  alertBox.innerHTML = '';
+  try {
+    await apiFetch('/auth/register', {
+      method: 'POST',
+      body: {
+        nombre: document.getElementById('reg-nombre').value,
+        email: document.getElementById('reg-email').value,
+        contrasena: document.getElementById('reg-pass').value,
+        fecha_nacimiento: document.getElementById('reg-nacimiento').value || null,
+        posicion: document.getElementById('reg-posicion').value || null,
+      },
+    });
+    alertBox.innerHTML = `<div class="alert alert-ok">Cuenta creada. Ya podés iniciar sesión con tu email y contraseña.</div>`;
+    e.target.reset();
+  } catch (err) {
+    alertBox.innerHTML = `<div class="alert alert-error">${esc(err.message)}</div>`;
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resultados — Club de Voley</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html"><span class="ball"></span> Club de Voley</a>
+    <nav class="nav-links">
+      <a href="index.html">Inicio</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="horarios.html">Horarios</a>
+      <a href="resultados.html" class="active">Resultados</a>
+      <a href="galeria.html">Galería</a>
+    </nav>
+    <div class="nav-actions" id="nav-actions"></div>
+  </div>
+</header>
+
+<section class="block">
+  <div class="wrap">
+    <div class="section-title">
+      <h2>Resultados de partidos</h2>
+      <span class="tag">Últimos encuentros de todos los equipos</span>
+    </div>
+    <div id="lista"><div class="empty-state">Cargando resultados…</div></div>
+  </div>
+</section>
+
+<footer class="site-footer"><div class="wrap">Club de Voley — Sitio institucional</div></footer>
+
+<script src="js/api.js"></script>
+<script>
+async function cargar() {
+  const cont = document.getElementById('lista');
+  try {
+    const partidos = await apiFetch('/partidos');
+    if (partidos.length === 0) {
+      cont.innerHTML = '<div class="empty-state">Todavía no hay partidos cargados.</div>';
+      return;
+    }
+    cont.innerHTML = partidos.map(p => `
+      <div class="score-row">
+        <div>
+          <div class="teams">${esc(p.nombre_equipo)} vs. ${esc(p.rival)}</div>
+          <div class="fecha">${new Date(p.fecha).toLocaleDateString('es-AR')}</div>
+        </div>
+        <div class="score">${esc(p.resultado || '—')}</div>
+      </div>`).join('');
+  } catch (e) {
+    cont.innerHTML = `<div class="empty-state">No se pudo conectar con el servidor (${esc(e.message)}).</div>`;
+  }
+}
+cargar();
+</script>
+</body>
+</html>
