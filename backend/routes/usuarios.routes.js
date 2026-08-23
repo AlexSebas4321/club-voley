@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const pool = require('../db');
 const { verificarToken, requireRol } = require('../middleware/auth');
 const { idValido } = require('../middleware/validaciones');
