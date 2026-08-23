@@ -48,6 +48,7 @@ app.use('/api/noticias', require('./routes/noticias.routes'));
 app.use('/api/partidos', require('./routes/partidos.routes'));
 app.use('/api/cuotas', require('./routes/cuotas.routes'));
 app.use('/api/mensajes', require('./routes/mensajes.routes'));
+app.use('/api/diagnostico', require('./routes/diagnostico.routes'));
 
 // SPA fallback: rutas de API desconocidas devuelven 404 JSON; el resto, index.html
 app.get('*', (req, res) => {
