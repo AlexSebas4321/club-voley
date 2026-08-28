@@ -4,6 +4,7 @@
 -- Uso: abrir pgAdmin -> Query Tool -> pegar y ejecutar este archivo
 -- ============================================================
 
+DROP TABLE IF EXISTS chat_mensaje CASCADE;
 DROP TABLE IF EXISTS mensaje CASCADE;
 DROP TABLE IF EXISTS cuota CASCADE;
 DROP TABLE IF EXISTS partido CASCADE;
@@ -108,6 +109,20 @@ CREATE TABLE cuota (
 );
 
 -- ------------------------------------------------------------
+-- Tabla: chat_mensaje (mensajería interna 1 a 1 entre jugadores y directores)
+-- ------------------------------------------------------------
+CREATE TABLE chat_mensaje (
+    id_mensaje      SERIAL PRIMARY KEY,
+    id_remitente    INT NOT NULL REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    id_destinatario INT NOT NULL REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    cuerpo          TEXT NOT NULL,
+    leido           BOOLEAN NOT NULL DEFAULT FALSE,
+    fecha_envio     TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_chat_remitente    ON chat_mensaje(id_remitente);
+CREATE INDEX idx_chat_destinatario ON chat_mensaje(id_destinatario);
+
+-- ------------------------------------------------------------
 -- Tabla: mensaje (registro de correos enviados vía Gmail)
 -- ------------------------------------------------------------
 CREATE TABLE mensaje (
@@ -129,7 +144,9 @@ CREATE TABLE mensaje (
 INSERT INTO usuario (nombre, email, contrasena, rol) VALUES
 ('Alex Gallardo',  'admin@clubvoley.com',    '$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'administrador'),
 ('Juan Pérez',     'director@clubvoley.com','$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'director_tecnico'),
-('Marcos Díaz',    'jugador@clubvoley.com', '$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'jugador');
+('Marcos Díaz',    'jugador@clubvoley.com', '$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'jugador'),
+('Lucía Fernández','jugador2@clubvoley.com','$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'jugador'),
+('Tomás Ríos',     'jugador3@clubvoley.com','$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'jugador');
 
 INSERT INTO categoria (nombre, descripcion) VALUES
 ('Sub-14', 'Categoría formativa sub 14 años'),
@@ -139,7 +156,9 @@ INSERT INTO equipo (id_categoria, id_director_tecnico, nombre_equipo, descripcio
 (2, 2, 'Mayores A', 'Equipo principal masculino');
 
 INSERT INTO jugador (id_usuario, id_equipo, fecha_nacimiento, posicion) VALUES
-(3, 1, '2001-05-14', 'Armador');
+(3, 1, '2001-05-14', 'Armador'),
+(4, 1, '2003-09-02', 'Punta'),
+(5, 1, '2002-12-19', 'Central');
 
 INSERT INTO horario (id_equipo, dia, hora_inicio, hora_fin, lugar) VALUES
 (1, 'Lunes', '19:00', '21:00', 'Gimnasio Municipal'),

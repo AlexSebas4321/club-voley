@@ -25,6 +25,7 @@
       <a href="#resultados" class="tab-link" data-tab="resultados">Cargar resultados</a>
       <a href="#horarios" class="tab-link" data-tab="horarios">Horarios de mi equipo</a>
       <a href="#mensajes" class="tab-link" data-tab="mensajes">Enviar mensaje</a>
+      <a href="#chat" class="tab-link" data-tab="chat">Chat</a>
     </nav>
   </aside>
 
@@ -111,6 +112,24 @@
         <div class="field"><label>Mensaje</label><textarea id="m-cuerpo" required></textarea></div>
         <button class="btn btn-primary" type="submit">Enviar por Gmail</button>
       </form>
+    </section>
+
+    <section id="tab-chat" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Chat con jugadores y directores</h2></div>
+      <div class="chat-shell">
+        <div class="chat-sidebar">
+          <input type="text" id="chat-buscar" class="chat-search" placeholder="Buscar contacto…">
+          <div id="chat-contactos" class="chat-contactos"><div class="empty-state">Cargando…</div></div>
+        </div>
+        <div class="chat-main">
+          <div class="chat-header" id="chat-header">Seleccioná un contacto para comenzar a chatear.</div>
+          <div id="chat-mensajes" class="chat-mensajes"><div class="empty-state">Elegí un contacto de la lista.</div></div>
+          <form id="chat-form" class="chat-input" style="display:none">
+            <input type="text" id="chat-cuerpo" placeholder="Escribí tu mensaje…" autocomplete="off">
+            <button class="btn btn-primary btn-sm" type="submit">Enviar</button>
+          </form>
+        </div>
+      </div>
     </section>
 
   </main>

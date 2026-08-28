@@ -122,4 +122,116 @@ document.addEventListener('DOMContentLoaded', async () => {
   cargarResultados();
   cargarCuota();
   cargarNoticias();
+
+  // ---------------- CHAT INTERNO ----------------
+  let contactoActivo = null;
+  let contactos = [];
+  let pollTimer = null;
+
+  async function cargarContactos() {
+    const cont = document.getElementById('chat-contactos');
+    try {
+      const data = await apiFetch('/mensajes/chat/contactos', { auth: true });
+      contactos = data;
+      pintarContactos();
+    } catch (e) {
+      cont.innerHTML = `<div class="empty-state">Error: ${esc(e.message)}</div>`;
+    }
+  }
+
+  function pintarContactos(filtro = '') {
+    const cont = document.getElementById('chat-contactos');
+    const lista = contactos.filter(c =>
+      c.nombre.toLowerCase().includes(filtro.toLowerCase())
+    );
+    if (lista.length === 0) {
+      cont.innerHTML = '<div class="empty-state">No hay contactos disponibles.</div>';
+      return;
+    }
+    cont.innerHTML = lista.map(c => `
+      <div class="chat-contacto ${contactoActivo === c.id_usuario ? 'activo' : ''}"
+           onclick="abrirChat(${c.id_usuario})">
+        <div class="cc-fila">
+          <div class="cc-nombre">${esc(c.nombre)}</div>
+          ${(c.no_leidos > 0 && contactoActivo !== c.id_usuario)
+            ? `<span class="cc-no-leidos">${c.no_leidos}</span>` : ''}
+        </div>
+        <div class="cc-meta">${esc(c.rol === 'jugador' ? 'Jugador' : 'Director Técnico')}${c.equipo ? ' · ' + esc(c.equipo) : ''}</div>
+      </div>`).join('');
+  }
+
+  async function abrirChat(id) {
+    contactoActivo = id;
+    const persona = contactos.find(c => c.id_usuario === id);
+    if (persona) persona.no_leidos = 0;
+    document.getElementById('chat-header').textContent = persona
+      ? `${persona.nombre} · ${persona.rol === 'jugador' ? 'Jugador' : 'Director Técnico'}`
+      : 'Conversación';
+    document.getElementById('chat-form').style.display = 'flex';
+
+    pintarContactos(document.getElementById('chat-buscar').value);
+    await cargarMensajes();
+    document.getElementById('chat-cuerpo').value = '';
+    document.getElementById('chat-cuerpo').focus();
+  }
+
+  async function cargarMensajes() {
+    if (!contactoActivo) return;
+    const cont = document.getElementById('chat-mensajes');
+    try {
+      const mensajes = await apiFetch(`/mensajes/chat/${contactoActivo}`, { auth: true });
+      if (mensajes.length === 0) {
+        cont.innerHTML = '<div class="empty-state">Todavía no hay mensajes. Escribí el primero.</div>';
+        return;
+      }
+      const yo = Sesion.usuario().id_usuario;
+      cont.innerHTML = mensajes.map(m => `
+        <div class="chat-burbuja ${m.id_remitente === yo ? 'mio' : 'otro'}">
+          <div class="cb-texto">${esc(m.cuerpo)}</div>
+          <div class="cb-hora">${new Date(m.fecha_envio).toLocaleString('es-AR')}</div>
+        </div>`).join('');
+      cont.scrollTop = cont.scrollHeight;
+    } catch (e) {
+      cont.innerHTML = `<div class="empty-state">Error: ${esc(e.message)}</div>`;
+    }
+  }
+
+  document.getElementById('chat-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('chat-cuerpo');
+    const texto = input.value.trim();
+    if (!texto || !contactoActivo) return;
+    try {
+      await apiFetch(`/mensajes/chat/${contactoActivo}`, {
+        method: 'POST', auth: true, body: { cuerpo: texto },
+      });
+      input.value = '';
+      await cargarMensajes();
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  document.getElementById('chat-buscar').addEventListener('input', (e) => {
+    pintarContactos(e.target.value);
+  });
+
+  window.abrirChat = abrirChat;
+
+  // Refresco periódico para ver los mensajes entrantes y los no leídos
+  async function refrescarPoll() {
+    try {
+      const data = await apiFetch('/mensajes/chat/contactos', { auth: true });
+      contactos = data;
+      pintarContactos(document.getElementById('chat-buscar').value);
+    } catch (e) { /* ignore */ }
+    if (contactoActivo) await cargarMensajes();
+  }
+  function iniciarPoll() {
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(refrescarPoll, 5000);
+  }
+  iniciarPoll();
+
+  cargarContactos();
 });

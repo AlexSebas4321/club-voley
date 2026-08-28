@@ -25,6 +25,7 @@
       <a href="#resultados" class="tab-link" data-tab="resultados">Resultados</a>
       <a href="#cuota" class="tab-link" data-tab="cuota">Pagar cuota</a>
       <a href="#noticias" class="tab-link" data-tab="noticias">Noticias</a>
+      <a href="#chat" class="tab-link" data-tab="chat">Mensajes</a>
     </nav>
   </aside>
 
@@ -49,6 +50,24 @@
     <section id="tab-noticias" class="tab-view" style="display:none">
       <div class="section-title"><h2>Últimas noticias</h2></div>
       <div id="noticias-cont" class="grid grid-2"><div class="empty-state">Cargando…</div></div>
+    </section>
+
+    <section id="tab-chat" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Mensajes</h2></div>
+      <div class="chat-shell">
+        <div class="chat-sidebar">
+          <input type="text" id="chat-buscar" class="chat-search" placeholder="Buscar contacto…">
+          <div id="chat-contactos" class="chat-contactos"><div class="empty-state">Cargando…</div></div>
+        </div>
+        <div class="chat-main">
+          <div class="chat-header" id="chat-header">Seleccioná un contacto para comenzar a chatear.</div>
+          <div id="chat-mensajes" class="chat-mensajes"><div class="empty-state">Elegí un contacto de la lista.</div></div>
+          <form id="chat-form" class="chat-input" style="display:none">
+            <input type="text" id="chat-cuerpo" placeholder="Escribí tu mensaje…" autocomplete="off">
+            <button class="btn btn-primary btn-sm" type="submit">Enviar</button>
+          </form>
+        </div>
+      </div>
     </section>
 
   </main>

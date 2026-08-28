@@ -121,4 +121,116 @@ router.get('/historial', verificarToken, requireRol('director_tecnico', 'adminis
   }
 });
 
+// ============================================================
+// CHAT INTERNO 1 a 1 (jugadores y directores técnicos)
+// ============================================================
+
+// Roles que pueden usar el chat interno
+const ROLES_CHAT = ['jugador', 'director_tecnico'];
+
+/**
+ * GET /api/mensajes/chat/contactos
+ * Lista los usuarios con los que se puede chatear (otros jugadores y directores).
+ */
+router.get('/chat/contactos', verificarToken, requireRol(...ROLES_CHAT), async (req, res) => {
+  try {
+    const resultado = await pool.query(
+      `SELECT u.id_usuario, u.nombre, u.rol,
+              COALESCE(e.nombre_equipo, '') AS equipo,
+              COALESCE(nr.no_leidos, 0)::INT AS no_leidos
+       FROM usuario u
+       LEFT JOIN jugador j ON j.id_usuario = u.id_usuario
+       LEFT JOIN equipo e ON e.id_equipo = j.id_equipo
+       LEFT JOIN (
+         SELECT id_remitente, COUNT(*) AS no_leidos
+         FROM chat_mensaje
+         WHERE id_destinatario = $1 AND leido = FALSE
+         GROUP BY id_remitente
+       ) nr ON nr.id_remitente = u.id_usuario
+       WHERE u.rol IN ('jugador', 'director_tecnico')
+         AND u.id_usuario <> $1
+       ORDER BY u.rol, u.nombre`,
+      [req.usuario.id_usuario]
+    );
+    res.json(resultado.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los contactos.' });
+  }
+});
+
+/**
+ * GET /api/mensajes/chat/:idDestino
+ * Devuelve la conversación entre el usuario actual y el destinatario (orden cronológico).
+ */
+router.get('/chat/:idDestino', verificarToken, requireRol(...ROLES_CHAT), async (req, res) => {
+  const idDestino = Number(req.params.idDestino);
+  if (!idValido(idDestino)) {
+    return res.status(400).json({ error: 'ID de destinatario inválido.' });
+  }
+  try {
+    const resultado = await pool.query(
+      `SELECT m.id_mensaje, m.id_remitente, m.cuerpo, m.leido, m.fecha_envio,
+              r.nombre AS nombre_remitente
+       FROM chat_mensaje m
+       JOIN usuario r ON r.id_usuario = m.id_remitente
+       WHERE (m.id_remitente = $1 AND m.id_destinatario = $2)
+          OR (m.id_remitente = $2 AND m.id_destinatario = $1)
+       ORDER BY m.fecha_envio ASC`,
+      [req.usuario.id_usuario, idDestino]
+    );
+
+    // Marcar como leídos los mensajes que me llegaron a mí
+    await pool.query(
+      `UPDATE chat_mensaje SET leido = TRUE
+       WHERE id_destinatario = $1 AND id_remitente = $2 AND leido = FALSE`,
+      [req.usuario.id_usuario, idDestino]
+    );
+
+    res.json(resultado.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener la conversación.' });
+  }
+});
+
+/**
+ * POST /api/mensajes/chat/:idDestino  body: { cuerpo }
+ * Envía un mensaje del usuario actual al destinatario.
+ */
+router.post('/chat/:idDestino', verificarToken, requireRol(...ROLES_CHAT), async (req, res) => {
+  const idDestino = Number(req.params.idDestino);
+  const { cuerpo } = req.body;
+
+  if (!idValido(idDestino)) {
+    return res.status(400).json({ error: 'ID de destinatario inválido.' });
+  }
+  if (!cuerpo || !String(cuerpo).trim()) {
+    return res.status(400).json({ error: 'El mensaje no puede estar vacío.' });
+  }
+  if (idDestino === req.usuario.id_usuario) {
+    return res.status(400).json({ error: 'No podés enviarte un mensaje a vos mismo.' });
+  }
+
+  try {
+    const existe = await pool.query(
+      'SELECT 1 FROM usuario WHERE id_usuario = $1 AND rol IN (\'jugador\', \'director_tecnico\')',
+      [idDestino]
+    );
+    if (existe.rows.length === 0) {
+      return res.status(404).json({ error: 'El destinatario no existe o no puede recibir mensajes.' });
+    }
+
+    const insertado = await pool.query(
+      `INSERT INTO chat_mensaje (id_remitente, id_destinatario, cuerpo)
+       VALUES ($1, $2, $3) RETURNING *`,
+      [req.usuario.id_usuario, idDestino, String(cuerpo).trim()]
+    );
+    res.status(201).json(insertado.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al enviar el mensaje.' });
+  }
+});
+
 module.exports = router;
