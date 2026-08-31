@@ -6,78 +6,101 @@
 <title>Iniciar sesión — Club de Voley</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="auth-page">
 
-<header class="site-header">
-  <div class="wrap nav-row">
-    <a class="brand" href="index.html"><span class="ball"></span> Club de Voley</a>
-    <nav class="nav-links">
-      <a href="index.html">Inicio</a>
-      <a href="noticias.html">Noticias</a>
-      <a href="horarios.html">Horarios</a>
-      <a href="resultados.html">Resultados</a>
-      <a href="galeria.html">Galería</a>
-    </nav>
-    <div class="nav-actions"></div>
+<div class="deco-ball"></div>
+
+<section class="auth-hero">
+  <div class="auth-brand">
+    <span class="ball big-ball"></span>
+    <h1>Club de Voley</h1>
+    <p>Toda la información del club en un solo lugar</p>
   </div>
-</header>
 
-<section class="block">
-  <div class="wrap" style="display:flex; gap:32px; flex-wrap:wrap; justify-content:center;">
-
-    <div>
-      <div class="section-title"><h2>Iniciar sesión</h2></div>
-      <form id="form-login" class="form-box">
-        <div id="login-alert"></div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" id="login-email" required placeholder="tu@email.com">
+  <div class="auth-cards">
+    <div class="auth-col">
+      <div class="auth-card">
+        <div class="auth-card-head">
+          <h2>Iniciar sesión</h2>
+          <span class="badge gold">Bienvenido de nuevo</span>
         </div>
-        <div class="field">
-          <label>Contraseña</label>
-          <input type="password" id="login-pass" required placeholder="••••••••">
-        </div>
-        <button class="btn btn-primary" style="width:100%" type="submit">Ingresar</button>
-        <p style="font-size:.8rem; color:var(--ink-soft); margin-top:14px;">
-        </p>
-      </form>
+        <form id="form-login" class="form-box auth-form">
+          <div id="login-alert"></div>
+          <div class="field">
+            <label>Email</label>
+            <div class="input-icon">
+              <span>✉️</span>
+              <input type="email" id="login-email" placeholder="tu@email.com" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>Contraseña</label>
+            <div class="input-icon">
+              <span>🔒</span>
+              <input type="password" id="login-pass" placeholder="••••••••" required>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
+          <p class="auth-hint">¿No tenés cuenta? Usá el formulario de registro.</p>
+        </form>
+      </div>
     </div>
 
-    <div>
-      <div class="section-title"><h2>Registrarme como jugador</h2></div>
-      <form id="form-registro" class="form-box">
-        <div id="reg-alert"></div>
-        <div class="field">
-          <label>Nombre completo</label>
-          <input type="text" id="reg-nombre" required>
+    <div class="auth-col alt">
+      <div class="auth-card dark">
+        <div class="auth-card-head">
+          <h2>Registrarme como jugador</h2>
+          <span class="badge orange">Nuevo ingreso</span>
         </div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" id="reg-email" required>
-        </div>
-        <div class="field">
-          <label>Contraseña</label>
-          <input type="password" id="reg-pass" required minlength="6">
-        </div>
-        <div class="field">
-          <label>Fecha de nacimiento</label>
-          <input type="date" id="reg-nacimiento">
-        </div>
-        <div class="field">
-          <label>Posición de juego</label>
-          <select id="reg-posicion">
-            <option value="">Sin especificar</option>
-            <option>Armador</option>
-            <option>Punta</option>
-            <option>Central</option>
-            <option>Opuesto</option>
-            <option>Líbero</option>
-          </select>
-        </div>
-        <button class="btn btn-dark" style="width:100%" type="submit">Crear cuenta</button>
-      </form>
+        <form id="form-registro" class="form-box auth-form transparent">
+          <div id="reg-alert"></div>
+          <div class="field">
+            <label>Nombre completo</label>
+            <div class="input-icon">
+              <span>👤</span>
+              <input type="text" id="reg-nombre" placeholder="Nombre y apellido" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <div class="input-icon">
+              <span>✉️</span>
+              <input type="email" id="reg-email" placeholder="tu@email.com" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>Contraseña</label>
+            <div class="input-icon">
+              <span>🔒</span>
+              <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" required minlength="6">
+            </div>
+          </div>
+          <div class="field">
+            <label>Fecha de nacimiento</label>
+            <div class="input-icon">
+              <span>🎂</span>
+              <input type="date" id="reg-nacimiento">
+            </div>
+          </div>
+          <div class="field">
+            <label>Posición de juego</label>
+            <div class="input-icon">
+              <span>🏐</span>
+              <select id="reg-posicion">
+                <option value="">Sin especificar</option>
+                <option>Armador</option>
+                <option>Punta</option>
+                <option>Central</option>
+                <option>Opuesto</option>
+                <option>Líbero</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-gold btn-block" type="submit">Crear cuenta</button>
+          <p class="auth-hint">Luego podés iniciar sesión con tu email y contraseña.</p>
+        </form>
+      </div>
     </div>
-
   </div>
 </section>
 
