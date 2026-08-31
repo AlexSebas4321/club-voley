@@ -126,7 +126,7 @@ router.get('/historial', verificarToken, requireRol('director_tecnico', 'adminis
 // ============================================================
 
 // Roles que pueden usar el chat interno
-const ROLES_CHAT = ['jugador', 'director_tecnico'];
+const ROLES_CHAT = ['jugador', 'director_tecnico', 'administrador'];
 
 /**
  * GET /api/mensajes/chat/contactos
@@ -147,7 +147,7 @@ router.get('/chat/contactos', verificarToken, requireRol(...ROLES_CHAT), async (
          WHERE id_destinatario = $1 AND leido = FALSE
          GROUP BY id_remitente
        ) nr ON nr.id_remitente = u.id_usuario
-       WHERE u.rol IN ('jugador', 'director_tecnico')
+       WHERE u.rol IN ('administrador', 'jugador', 'director_tecnico')
          AND u.id_usuario <> $1
        ORDER BY u.rol, u.nombre`,
       [req.usuario.id_usuario]
@@ -214,7 +214,7 @@ router.post('/chat/:idDestino', verificarToken, requireRol(...ROLES_CHAT), async
 
   try {
     const existe = await pool.query(
-      'SELECT 1 FROM usuario WHERE id_usuario = $1 AND rol IN (\'jugador\', \'director_tecnico\')',
+      'SELECT 1 FROM usuario WHERE id_usuario = $1 AND rol IN (\'administrador\', \'jugador\', \'director_tecnico\')',
       [idDestino]
     );
     if (existe.rows.length === 0) {

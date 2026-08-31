@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const usuario = Sesion.requiereRol(['director_tecnico', 'administrador']);
   if (!usuario) return;
-  document.getElementById('quien-soy').textContent = `${usuario.nombre} · Director Técnico`;
+  document.getElementById('quien-soy').innerHTML = `<strong>${esc(usuario.nombre)}</strong>Director Técnico`;
 
   document.querySelectorAll('.tab-link').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -210,6 +210,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  function etiquetaRol(rol) {
+    return rol === 'jugador' ? 'Jugador'
+         : rol === 'administrador' ? 'Administrador'
+         : 'Director Técnico';
+  }
+
   function pintarContactos(filtro = '') {
     const cont = document.getElementById('chat-contactos');
     const lista = contactos.filter(c =>
@@ -227,7 +233,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           ${(c.no_leidos > 0 && contactoActivo !== c.id_usuario)
             ? `<span class="cc-no-leidos">${c.no_leidos}</span>` : ''}
         </div>
-        <div class="cc-meta">${esc(c.rol === 'jugador' ? 'Jugador' : 'Director Técnico')}${c.equipo ? ' · ' + esc(c.equipo) : ''}</div>
+        <div class="cc-meta">${esc(etiquetaRol(c.rol))}${c.equipo ? ' · ' + esc(c.equipo) : ''}</div>
       </div>`).join('');
   }
 
@@ -236,7 +242,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const persona = contactos.find(c => c.id_usuario === id);
     if (persona) persona.no_leidos = 0;
     document.getElementById('chat-header').textContent = persona
-      ? `${persona.nombre} · ${persona.rol === 'jugador' ? 'Jugador' : 'Director Técnico'}`
+      ? `${persona.nombre} · ${etiquetaRol(persona.rol)}`
       : 'Conversación';
     document.getElementById('chat-form').style.display = 'flex';
 

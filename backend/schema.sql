@@ -139,14 +139,14 @@ CREATE TABLE mensaje (
 -- ------------------------------------------------------------
 -- Datos de ejemplo (opcional, útil para probar la app)
 -- La contraseña de todos los usuarios de ejemplo es: 123456
--- (hash bcrypt generado para "123456")
+-- (hash bcrypt generado para "123456": $2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2)
 -- ------------------------------------------------------------
 INSERT INTO usuario (nombre, email, contrasena, rol) VALUES
-('Alex Gallardo',  'admin@clubvoley.com',    '$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'administrador'),
-('Juan Pérez',     'director@clubvoley.com','$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'director_tecnico'),
-('Marcos Díaz',    'jugador@clubvoley.com', '$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'jugador'),
-('Lucía Fernández','jugador2@clubvoley.com','$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'jugador'),
-('Tomás Ríos',     'jugador3@clubvoley.com','$2b$10$blt5EycIcb3qtzrDMVg5yejxfyVFB.opLXdNSb39mBVdhg2Asin1y', 'jugador');
+('Alex Gallardo',  'admin@clubvoley.com',    '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'administrador'),
+('Juan Pérez',     'director@clubvoley.com','$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'director_tecnico'),
+('Marcos Díaz',    'jugador@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+('Lucía Fernández','jugador2@clubvoley.com','$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+('Tomás Ríos',     'jugador3@clubvoley.com','$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador');
 
 INSERT INTO categoria (nombre, descripcion) VALUES
 ('Sub-14', 'Categoría formativa sub 14 años'),

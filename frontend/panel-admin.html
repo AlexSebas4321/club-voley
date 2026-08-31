@@ -8,6 +8,8 @@
 </head>
 <body>
 
+<div class="deco-ball"></div>
+
 <header class="site-header">
   <div class="wrap nav-row">
     <a class="brand" href="index.html"><span class="ball"></span> Club de Voley</a>
@@ -19,18 +21,30 @@
 
 <div class="panel-shell">
   <aside class="panel-side">
+    <div class="brand-panel"><span class="ball" style="width:22px;height:22px"></span> Administración</div>
     <div class="who" id="quien-soy">Cargando…</div>
     <nav>
-      <a href="#usuarios" class="tab-link active" data-tab="usuarios">Usuarios</a>
-      <a href="#equipos" class="tab-link" data-tab="equipos">Equipos y categorías</a>
-      <a href="#mensajes" class="tab-link" data-tab="mensajes">Mensajería</a>
-      <a href="#historial" class="tab-link" data-tab="historial">Historial de envíos</a>
+      <a href="#resumen" class="tab-link active" data-tab="resumen"><span class="ico">◈</span> Resumen</a>
+      <a href="#usuarios" class="tab-link" data-tab="usuarios"><span class="ico">👥</span> Usuarios</a>
+      <a href="#equipos" class="tab-link" data-tab="equipos"><span class="ico">🏐</span> Equipos y categorías</a>
+      <a href="#noticias" class="tab-link" data-tab="noticias"><span class="ico">📰</span> Noticias</a>
+      <a href="#resultados" class="tab-link" data-tab="resultados"><span class="ico">🏆</span> Resultados</a>
+      <a href="#horarios" class="tab-link" data-tab="horarios"><span class="ico">🕒</span> Horarios</a>
+      <a href="#mensajes" class="tab-link" data-tab="mensajes"><span class="ico">✉️</span> Enviar correo</a>
+      <a href="#chat" class="tab-link" data-tab="chat"><span class="ico">💬</span> Chat interno</a>
+      <a href="#historial" class="tab-link" data-tab="historial"><span class="ico">🗂️</span> Historial de envíos</a>
     </nav>
   </aside>
 
   <main class="panel-main">
 
-    <section id="tab-usuarios" class="tab-view">
+    <section id="tab-resumen" class="tab-view">
+      <div class="section-title"><h2>Resumen general</h2></div>
+      <div id="estadisticas" class="estadisticas"></div>
+      <div class="panel-section"><h3>Últimas noticias</h3><div id="res-noticias" class="grid grid-2"><div class="empty-state">Cargando…</div></div></div>
+    </section>
+
+    <section id="tab-usuarios" class="tab-view" style="display:none">
       <div class="section-title"><h2>Gestión de usuarios</h2></div>
       <div id="usr-alert"></div>
       <form id="form-usuario" class="form-box" style="max-width:520px; margin-bottom:28px;">
@@ -71,6 +85,57 @@
       <div id="lista-equipos"></div>
     </section>
 
+    <section id="tab-noticias" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Publicar una noticia</h2></div>
+      <div id="admin-noticia-alert"></div>
+      <form id="form-admin-noticia" class="form-box" style="max-width:560px">
+        <div class="field"><label>Título</label><input type="text" id="an-titulo" required></div>
+        <div class="field"><label>Contenido</label><textarea id="an-contenido" required></textarea></div>
+        <div class="field">
+          <label>Estado</label>
+          <select id="an-estado">
+            <option value="publicada">Publicar ahora</option>
+            <option value="borrador">Guardar como borrador</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Guardar noticia</button>
+      </form>
+      <div class="panel-section"><h3>Todas las noticias</h3><div id="admin-todas-noticias" class="grid grid-2"><div class="empty-state">Cargando…</div></div></div>
+    </section>
+
+    <section id="tab-resultados" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Cargar / actualizar resultado</h2></div>
+      <div id="admin-resultado-alert"></div>
+      <form id="form-admin-resultado" class="form-box" style="max-width:480px">
+        <div class="field"><label>Equipo</label><select id="ar-equipo" required></select></div>
+        <div class="field"><label>Rival</label><input type="text" id="ar-rival" required></div>
+        <div class="field"><label>Fecha</label><input type="date" id="ar-fecha" required></div>
+        <div class="field"><label>Resultado (ej: 3-1)</label><input type="text" id="ar-resultado" placeholder="3-1"></div>
+        <button class="btn btn-primary" type="submit">Guardar partido</button>
+      </form>
+      <div class="panel-section"><h3>Historial</h3><div id="admin-lista-resultados"><div class="empty-state">Cargando…</div></div></div>
+    </section>
+
+    <section id="tab-horarios" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Horarios de entrenamiento</h2></div>
+      <div id="admin-horario-alert"></div>
+      <form id="form-admin-horario" class="form-box" style="max-width:480px">
+        <div class="field"><label>Equipo</label><select id="ah-equipo" required></select></div>
+        <div class="field">
+          <label>Día</label>
+          <select id="ah-dia" required>
+            <option>Lunes</option><option>Martes</option><option>Miércoles</option>
+            <option>Jueves</option><option>Viernes</option><option>Sábado</option><option>Domingo</option>
+          </select>
+        </div>
+        <div class="field"><label>Hora de inicio</label><input type="time" id="ah-inicio" required></div>
+        <div class="field"><label>Hora de fin</label><input type="time" id="ah-fin" required></div>
+        <div class="field"><label>Lugar</label><input type="text" id="ah-lugar" placeholder="Gimnasio Municipal"></div>
+        <button class="btn btn-primary" type="submit">Agregar horario</button>
+      </form>
+      <div class="panel-section"><h3>Horarios cargados</h3><div id="admin-lista-horarios"><div class="empty-state">Cargando…</div></div></div>
+    </section>
+
     <section id="tab-mensajes" class="tab-view" style="display:none">
       <div class="section-title"><h2>Enviar mensaje por correo (Gmail)</h2></div>
       <p style="color:var(--ink-soft); font-size:.9rem; max-width:600px;">
@@ -101,6 +166,24 @@
         <div class="field"><label>Mensaje</label><textarea id="m-cuerpo" required></textarea></div>
         <button class="btn btn-primary" type="submit">Enviar por Gmail</button>
       </form>
+    </section>
+
+    <section id="tab-chat" class="tab-view" style="display:none">
+      <div class="section-title"><h2>Chat con jugadores y directores</h2></div>
+      <div class="chat-shell">
+        <div class="chat-sidebar">
+          <input type="text" id="chat-buscar" class="chat-search" placeholder="Buscar contacto…">
+          <div id="chat-contactos" class="chat-contactos"><div class="empty-state">Cargando…</div></div>
+        </div>
+        <div class="chat-main">
+          <div class="chat-header" id="chat-header">Seleccioná un contacto para comenzar a chatear.</div>
+          <div id="chat-mensajes" class="chat-mensajes"><div class="empty-state">Elegí un contacto de la lista.</div></div>
+          <form id="chat-form" class="chat-input" style="display:none">
+            <input type="text" id="chat-cuerpo" placeholder="Escribí tu mensaje…" autocomplete="off">
+            <button class="btn btn-primary btn-sm" type="submit">Enviar</button>
+          </form>
+        </div>
+      </div>
     </section>
 
     <section id="tab-historial" class="tab-view" style="display:none">
