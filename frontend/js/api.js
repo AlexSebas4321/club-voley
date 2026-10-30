@@ -206,16 +206,47 @@ function crearBotonSubir() {
 
 function activarBrilloTarjetas() {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   document.addEventListener('pointermove', (e) => {
     if (!(e.target instanceof Element)) return;
-    const tarjeta = e.target.closest('.card, .metrica, .score-row');
+    const tarjeta = e.target.closest('.card, .metrica, .score-row, .gallery-grid .ph, .auth-card');
     if (!tarjeta) return;
 
     const rect = tarjeta.getBoundingClientRect();
     tarjeta.style.setProperty('--mx', `${e.clientX - rect.left}px`);
     tarjeta.style.setProperty('--my', `${e.clientY - rect.top}px`);
+
+    if (!tarjeta.matches('.card, .metrica, .gallery-grid .ph, .auth-card')) return;
+    const rx = ((e.clientY - rect.top) / rect.height - 0.5) * -7;
+    const ry = ((e.clientX - rect.left) / rect.width - 0.5) * 9;
+    tarjeta.style.setProperty('--rx', `${rx.toFixed(2)}deg`);
+    tarjeta.style.setProperty('--ry', `${ry.toFixed(2)}deg`);
   }, { passive: true });
+
+  document.addEventListener('pointerout', (e) => {
+    if (!(e.target instanceof Element)) return;
+    const tarjeta = e.target.closest('.card, .metrica, .gallery-grid .ph, .auth-card');
+    if (!tarjeta) return;
+    if (e.relatedTarget instanceof Node && tarjeta.contains(e.relatedTarget)) return;
+    tarjeta.style.removeProperty('--rx');
+    tarjeta.style.removeProperty('--ry');
+  }, { passive: true });
+}
+
+function activarParallaxHero() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const hero = document.querySelector('.hero');
+  const bola = document.querySelector('.hero-ball');
+  if (!hero || !bola) return;
+
+  const actualizar = () => {
+    const avance = Math.min(window.scrollY, hero.offsetHeight);
+    bola.style.setProperty('--parallax', `${avance * 0.14}px`);
+  };
+
+  actualizar();
+  window.addEventListener('scroll', actualizar, { passive: true });
 }
 
 function iniciarRefinamientoVisual() {
@@ -223,6 +254,7 @@ function iniciarRefinamientoVisual() {
   crearBarraProgreso();
   crearBotonSubir();
   activarBrilloTarjetas();
+  activarParallaxHero();
 }
 
 if (document.readyState === 'loading') {
