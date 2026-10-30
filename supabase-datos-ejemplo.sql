@@ -12,24 +12,29 @@
 -- ------------------------------------------------------------
 -- Usuarios
 -- ------------------------------------------------------------
-INSERT INTO usuario (nombre, email, contrasena, rol) VALUES
-('Alex Gallardo',   'admin@clubvoley.com',     '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'administrador'),
-('Juan Pérez',      'director@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'director_tecnico'),
-('Marcos Díaz',     'jugador@clubvoley.com',   '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Lucía Fernández', 'jugador2@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Tomás Ríos',      'jugador3@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Sofía Martínez',  'directora@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'director_tecnico'),
-('Valentina López', 'jugador4@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Bruno Castro',    'jugador5@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Camila Herrera',  'jugador6@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Nicolás Vega',    'jugador7@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Martina Sosa',    'jugador8@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Diego Acosta',    'jugador9@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Emilia Torres',   'jugador10@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Julieta Ramos',   'jugador11@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Facundo Prieto',  'jugador12@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
-('Renata Molina',   'jugador13@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador')
-ON CONFLICT (email) DO NOTHING;
+INSERT INTO usuario (nombre, email, contrasena, rol)
+SELECT v.nombre, v.email, v.contrasena, v.rol
+FROM (VALUES
+    ('Alex Gallardo',   'admin@clubvoley.com',     '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'administrador'),
+    ('Juan Pérez',      'director@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'director_tecnico'),
+    ('Marcos Díaz',     'jugador@clubvoley.com',   '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Lucía Fernández', 'jugador2@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Tomás Ríos',      'jugador3@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Sofía Martínez',  'directora@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'director_tecnico'),
+    ('Valentina López', 'jugador4@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Bruno Castro',    'jugador5@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Camila Herrera',  'jugador6@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Nicolás Vega',    'jugador7@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Martina Sosa',    'jugador8@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Diego Acosta',    'jugador9@clubvoley.com',  '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Emilia Torres',   'jugador10@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Julieta Ramos',   'jugador11@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Facundo Prieto',  'jugador12@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador'),
+    ('Renata Molina',   'jugador13@clubvoley.com', '$2b$10$Ap0YLBau95uPkNU5JnobHeVP4Bs/3mOjNN8iD6EkJwBks2y79Tkq2', 'jugador')
+) AS v(nombre, email, contrasena, rol)
+WHERE NOT EXISTS (
+    SELECT 1 FROM usuario u WHERE u.email = v.email
+);
 
 -- ------------------------------------------------------------
 -- Categorías
