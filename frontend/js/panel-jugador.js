@@ -4,15 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('quien-soy').innerHTML = `<strong>${esc(usuario.nombre)}</strong>Jugador`;
 
   // --- Navegación entre pestañas ---
-  document.querySelectorAll('.tab-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
-      document.querySelectorAll('.tab-view').forEach(v => v.style.display = 'none');
-      link.classList.add('active');
-      document.getElementById(`tab-${link.dataset.tab}`).style.display = 'block';
-    });
-  });
+  configurarTabs();
 
   // --- Mis horarios ---
   async function cargarHorarios() {
@@ -186,6 +178,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cont = document.getElementById('chat-mensajes');
     try {
       const mensajes = await apiFetch(`/mensajes/chat/${contactoActivo}`, { auth: true });
+      const firma = `${contactoActivo}:${mensajes.map(m => m.id_mensaje).join(',')}`;
+      if (cont.dataset.firma === firma) return;
+      cont.dataset.firma = firma;
       if (mensajes.length === 0) {
         cont.innerHTML = '<div class="empty-state">Todavía no hay mensajes. Escribí el primero.</div>';
         return;

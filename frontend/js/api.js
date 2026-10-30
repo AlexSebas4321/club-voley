@@ -79,3 +79,74 @@ function pintarNavPublico() {
 }
 
 document.addEventListener('DOMContentLoaded', pintarNavPublico);
+
+// ============================================================
+// Animaciones compartidas
+// ============================================================
+
+// Navegación entre pestañas con animación de entrada en cada cambio
+function configurarTabs() {
+  document.querySelectorAll('.tab-link').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.tab-link').forEach((l) => l.classList.remove('active'));
+      document.querySelectorAll('.tab-view').forEach((v) => {
+        v.style.display = 'none';
+        v.classList.remove('tab-enter');
+      });
+      link.classList.add('active');
+      const vista = document.getElementById(`tab-${link.dataset.tab}`);
+      if (!vista) return;
+      vista.style.display = 'block';
+      void vista.offsetWidth;
+      vista.classList.add('tab-enter');
+    });
+  });
+}
+
+// Onda (ripple) al hacer clic en cualquier botón
+document.addEventListener('click', (e) => {
+  const boton = e.target.closest('.btn');
+  if (!boton || boton.disabled) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const rect = boton.getBoundingClientRect();
+  const tamano = Math.max(rect.width, rect.height);
+  const onda = document.createElement('span');
+  onda.className = 'btn-ripple';
+  onda.style.width = `${tamano}px`;
+  onda.style.height = `${tamano}px`;
+  onda.style.left = `${e.clientX - rect.left - tamano / 2}px`;
+  onda.style.top = `${e.clientY - rect.top - tamano / 2}px`;
+  boton.appendChild(onda);
+  setTimeout(() => onda.remove(), 650);
+});
+
+// Aparición suave de secciones y tarjetas al hacer scroll
+function prepararReveal() {
+  const elementos = document.querySelectorAll('.block > .wrap');
+
+  if (!('IntersectionObserver' in window)) {
+    elementos.forEach((el) => el.classList.add('in-view'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entradas) => {
+    entradas.forEach((entrada) => {
+      if (entrada.isIntersecting) {
+        entrada.target.classList.add('in-view');
+        observer.unobserve(entrada.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  elementos.forEach((el) => {
+    if (el.dataset.revealPreparado) return;
+    el.dataset.revealPreparado = '1';
+    el.classList.add('reveal');
+    observer.observe(el);
+  });
+}
+
+prepararReveal();
+window.refrescarAnimaciones = prepararReveal;

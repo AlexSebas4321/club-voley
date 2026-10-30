@@ -40,12 +40,19 @@ club-voley/
 2. Creá una base de datos nueva llamada `club_voley` (clic derecho en "Databases" → Create → Database).
 3. Con `club_voley` seleccionada, abrí el **Query Tool**.
 4. Abrí el archivo `backend/schema.sql` de este proyecto, pegá todo su contenido en el Query
-   Tool y ejecutalo (▶️). Esto crea las 9 tablas (usuario, categoria, equipo, jugador,
-   horario, noticia, partido, cuota, mensaje) y carga usuarios y datos de ejemplo.
-5. Usuarios de prueba que quedan creados (contraseña para los tres: `123456`):
+   Tool y ejecutalo (▶️). Esto crea las 10 tablas (usuario, categoria, equipo, jugador,
+   horario, noticia, partido, cuota, chat_mensaje, mensaje) y carga 16 usuarios y datos
+   de ejemplo.
+5. Usuarios de prueba que quedan creados (contraseña para todos: `123456`):
    - `admin@clubvoley.com` → Administrador
    - `director@clubvoley.com` → Director Técnico
+   - `directora@clubvoley.com` → Directora Técnica
    - `jugador@clubvoley.com` → Jugador
+   - `jugador2@clubvoley.com` … `jugador13@clubvoley.com` → más jugadores
+
+   El script también carga 13 jugadores, 6 equipos, 5 categorías, 19 horarios,
+   9 noticias (incluido un borrador), 16 partidos, 29 cuotas pagadas/pendientes,
+   12 mensajes de chat y 4 correos para probar todos los paneles.
 
 ---
 
@@ -148,7 +155,8 @@ Alternativa (Live Server de VS Code u otro servidor estático):
 2. Abrí el **SQL Editor** del proyecto, pegá todo el contenido de `backend/schema.sql`
    y ejecutalo. Esto crea las 9 tablas y los usuarios de ejemplo.
    > ⚠️ El script hace `DROP TABLE` de todo: usalo solo en la base nueva de Supabase
-   > o vas a perder los datos que tengas.
+   > o vas a perder los datos que tengas. Si ya tenés datos reales, hacé un backup y
+   > ejecutá únicamente la sección de `INSERT` de los datos de ejemplo.
 3. Andá a **Project Settings → Database → Connection string → Transaction pooler**
    (puerto 6543). Copiá los datos para las variables de entorno del paso 8.3:
    - Host: algo como `aws-0-xx-xxxx-x.pooler.supabase.com`
@@ -192,3 +200,22 @@ Creá un repositorio en GitHub y subí el proyecto completo (`backend/`, `fronte
 - Si Gmail rechaza envíos desde la nube, generá una contraseña de aplicación nueva o usá
   un servicio transaccional (Resend, Brevo) cambiando el transportador en
   `backend/utils/mailer.js`.
+
+### 8.5 — Subir cambios después de editar el proyecto
+
+1. Guardá todos los archivos.
+2. Abrí PowerShell en la carpeta `club-voley` y ejecutá:
+   ```powershell
+   .\deploy.ps1 "Agrego datos de ejemplo y animaciones"
+   ```
+   Si Windows bloquea la ejecución del script:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\deploy.ps1 "Agrego datos de ejemplo y animaciones"
+   ```
+3. El script hace `git add -A`, `git commit` y `git push origin main`. Vercel detecta
+   el push y vuelve a desplegar el sitio automáticamente.
+4. Si además querés cargar los datos de ejemplo nuevos:
+   - **Base nueva:** ejecutá `backend/schema.sql` en el **SQL Editor de Supabase**.
+     Recordá que hace `DROP TABLE`: no lo uses si ya tenés datos.
+   - **Base con datos existentes:** ejecutá `supabase-datos-ejemplo.sql`. Ese script
+     no borra nada y solo agrega los registros que todavía no existen.

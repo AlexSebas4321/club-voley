@@ -3,17 +3,29 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!usuario) return;
   document.getElementById('quien-soy').innerHTML = `<strong>${esc(usuario.nombre)}</strong>Administrador`;
 
-  document.querySelectorAll('.tab-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
-      document.querySelectorAll('.tab-view').forEach(v => v.style.display = 'none');
-      link.classList.add('active');
-      document.getElementById(`tab-${link.dataset.tab}`).style.display = 'block';
-    });
-  });
+  configurarTabs();
 
   // ==================== RESUMEN / DASHBOARD ====================
+  function animarMetricas(contenedor) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    contenedor.querySelectorAll('.metrica .num').forEach((el, indice) => {
+      const objetivo = Number(el.textContent) || 0;
+      const duracion = 750;
+      const inicio = performance.now() + indice * 60;
+      el.textContent = '0';
+
+      function paso(ahora) {
+        if (ahora < inicio) { requestAnimationFrame(paso); return; }
+        const avance = Math.min((ahora - inicio) / duracion, 1);
+        const suave = 1 - Math.pow(1 - avance, 3);
+        el.textContent = Math.round(objetivo * suave);
+        if (avance < 1) requestAnimationFrame(paso);
+        else el.textContent = objetivo;
+      }
+      requestAnimationFrame(paso);
+    });
+  }
+
   async function cargarResumen() {
     const cont = document.getElementById('estadisticas');
     try {
@@ -35,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="metrica green"><div class="num">${noticias.length}</div><div class="lab">Noticias</div></div>
         <div class="metrica teal"><div class="num">${partidos.length}</div><div class="lab">Partidos</div></div>
       `;
+      animarMetricas(cont);
     } catch (e) {
       cont.innerHTML = `<div class="empty-state">Error: ${esc(e.message)}</div>`;
     }
@@ -464,6 +477,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cont = document.getElementById('chat-mensajes');
     try {
       const mensajes = await apiFetch(`/mensajes/chat/${contactoActivo}`, { auth: true });
+      const firma = `${contactoActivo}:${mensajes.map(m => m.id_mensaje).join(',')}`;
+      if (cont.dataset.firma === firma) return;
+      cont.dataset.firma = firma;
       if (mensajes.length === 0) {
         cont.innerHTML = '<div class="empty-state">Todavía no hay mensajes. Escribí el primero.</div>';
         return;
