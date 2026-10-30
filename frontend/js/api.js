@@ -150,3 +150,83 @@ function prepararReveal() {
 
 prepararReveal();
 window.refrescarAnimaciones = prepararReveal;
+
+function configurarCabecera() {
+  if (document.body.classList.contains('panel-page')) return;
+  const header = document.querySelector('.site-header');
+  if (!header) return;
+
+  const actualizar = () => {
+    header.classList.toggle('is-scrolled', window.scrollY > 6);
+  };
+
+  actualizar();
+  window.addEventListener('scroll', actualizar, { passive: true });
+}
+
+function crearBarraProgreso() {
+  const barra = document.createElement('div');
+  barra.className = 'scroll-progress';
+  barra.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(barra);
+
+  const actualizar = () => {
+    const alto = document.documentElement.scrollHeight - window.innerHeight;
+    const avance = alto > 0 ? Math.min(window.scrollY / alto, 1) : 0;
+    barra.style.transform = `scaleX(${avance})`;
+  };
+
+  actualizar();
+  window.addEventListener('scroll', actualizar, { passive: true });
+  window.addEventListener('resize', actualizar);
+}
+
+function crearBotonSubir() {
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = 'to-top';
+  boton.setAttribute('aria-label', 'Volver arriba');
+  boton.title = 'Volver arriba';
+  boton.innerHTML = '<span class="ball"></span>';
+
+  boton.addEventListener('click', () => {
+    const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reducir ? 'auto' : 'smooth' });
+  });
+
+  document.body.appendChild(boton);
+
+  const actualizar = () => {
+    boton.classList.toggle('visible', window.scrollY > 420);
+  };
+
+  actualizar();
+  window.addEventListener('scroll', actualizar, { passive: true });
+}
+
+function activarBrilloTarjetas() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  document.addEventListener('pointermove', (e) => {
+    if (!(e.target instanceof Element)) return;
+    const tarjeta = e.target.closest('.card, .metrica, .score-row');
+    if (!tarjeta) return;
+
+    const rect = tarjeta.getBoundingClientRect();
+    tarjeta.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+    tarjeta.style.setProperty('--my', `${e.clientY - rect.top}px`);
+  }, { passive: true });
+}
+
+function iniciarRefinamientoVisual() {
+  configurarCabecera();
+  crearBarraProgreso();
+  crearBotonSubir();
+  activarBrilloTarjetas();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', iniciarRefinamientoVisual);
+} else {
+  iniciarRefinamientoVisual();
+}
