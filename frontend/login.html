@@ -16,6 +16,7 @@
     <span class="ball big-ball"></span>
     <h1>Club de Voley</h1>
     <p>Toda la información del club en un solo lugar</p>
+    <a class="auth-back" href="index.html">← Volver al inicio</a>
   </div>
 
   <div class="auth-cards">
@@ -28,22 +29,31 @@
         <form id="form-login" class="form-box auth-form">
           <div id="login-alert"></div>
           <div class="field">
-            <label>Email</label>
+            <label for="login-email">Email</label>
             <div class="input-icon">
               <span>✉️</span>
-              <input type="email" id="login-email" placeholder="tu@email.com" required>
+              <input type="email" id="login-email" name="email" autocomplete="email" placeholder="tu@email.com" required>
             </div>
           </div>
           <div class="field">
-            <label>Contraseña</label>
+            <label for="login-pass">Contraseña</label>
             <div class="input-icon">
               <span>🔒</span>
-              <input type="password" id="login-pass" placeholder="••••••••" required>
+              <input type="password" id="login-pass" name="contrasena" autocomplete="current-password" placeholder="••••••••" required>
+              <button type="button" class="pass-toggle" data-target="login-pass" aria-label="Mostrar contraseña">👁️</button>
             </div>
           </div>
           <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
           <p class="auth-hint">¿No tenés cuenta? Usá el formulario de registro.</p>
         </form>
+        <div class="auth-perks">
+          <span class="auth-perks-title">Un acceso para todo el club</span>
+          <div class="auth-mini-stats">
+            <div class="auth-mini-stat orange"><strong>24/7</strong><span>Online</span></div>
+            <div class="auth-mini-stat gold"><strong>3</strong><span>Perfiles</span></div>
+            <div class="auth-mini-stat teal"><strong>100%</strong><span>Club</span></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -56,38 +66,39 @@
         <form id="form-registro" class="form-box auth-form transparent">
           <div id="reg-alert"></div>
           <div class="field">
-            <label>Nombre completo</label>
+            <label for="reg-nombre">Nombre completo</label>
             <div class="input-icon">
               <span>👤</span>
-              <input type="text" id="reg-nombre" placeholder="Nombre y apellido" required>
+              <input type="text" id="reg-nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido" required>
             </div>
           </div>
           <div class="field">
-            <label>Email</label>
+            <label for="reg-email">Email</label>
             <div class="input-icon">
               <span>✉️</span>
-              <input type="email" id="reg-email" placeholder="tu@email.com" required>
+              <input type="email" id="reg-email" name="email" autocomplete="email" placeholder="tu@email.com" required>
             </div>
           </div>
           <div class="field">
-            <label>Contraseña</label>
+            <label for="reg-pass">Contraseña</label>
             <div class="input-icon">
               <span>🔒</span>
-              <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" required minlength="6">
+              <input type="password" id="reg-pass" name="contrasena" autocomplete="new-password" placeholder="Mínimo 6 caracteres" required minlength="6">
+              <button type="button" class="pass-toggle" data-target="reg-pass" aria-label="Mostrar contraseña">👁️</button>
             </div>
           </div>
           <div class="field">
-            <label>Fecha de nacimiento</label>
+            <label for="reg-nacimiento">Fecha de nacimiento</label>
             <div class="input-icon">
               <span>🎂</span>
-              <input type="date" id="reg-nacimiento">
+              <input type="date" id="reg-nacimiento" name="fecha_nacimiento" autocomplete="bday">
             </div>
           </div>
           <div class="field">
-            <label>Posición de juego</label>
+            <label for="reg-posicion">Posición de juego</label>
             <div class="input-icon">
               <span>🏐</span>
-              <select id="reg-posicion">
+              <select id="reg-posicion" name="posicion">
                 <option value="">Sin especificar</option>
                 <option>Armador</option>
                 <option>Punta</option>
@@ -151,6 +162,17 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
   } catch (err) {
     alertBox.innerHTML = `<div class="alert alert-error">${esc(err.message)}</div>`;
   }
+});
+
+document.querySelectorAll('.pass-toggle').forEach((boton) => {
+  boton.addEventListener('click', () => {
+    const input = document.getElementById(boton.dataset.target);
+    if (!input) return;
+    const visible = input.type === 'text';
+    input.type = visible ? 'password' : 'text';
+    boton.classList.toggle('is-visible', !visible);
+    boton.setAttribute('aria-label', visible ? 'Mostrar contraseña' : 'Ocultar contraseña');
+  });
 });
 </script>
 </body>
